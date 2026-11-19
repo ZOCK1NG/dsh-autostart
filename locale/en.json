@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Autostart",
+    "description": "Starts DeepSeek Harness silently in the system tray when you sign in to Windows.",
+    "detail": "docs/DETAIL.md"
+  }
+}

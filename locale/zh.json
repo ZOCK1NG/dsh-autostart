@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "开机自启动",
+    "description": "Windows 登录后在系统托盘静默启动 DeepSeek Harness。",
+    "detail": "docs/DETAIL.md"
+  }
+}
