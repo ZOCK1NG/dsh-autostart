@@ -6,6 +6,12 @@ Starts DeepSeek Harness silently in the system tray when you sign in to Windows,
 
 > Unofficial community plugin. Not affiliated with DeepSeek. Windows only.
 
+## Compatibility
+
+- **Verified:** DSH desktop **0.2.2-rc.5** (build `3f85d888b1`), Windows 11, 2026-11-26 — `autostart_status`, `autostart_verify`, `autostart_enable` / `autostart_disable` and the real sign-in launch all check out.
+- **Requires:** a DSH build that exposes the Host plugin API used here (`ctx.effect`, `ctx.tools.register`), i.e. 0.2.2-rc.3 or newer. The bundle has no npm dependencies.
+- **Windows only:** it manages a Windows Startup-folder login item and the launcher chain runs through `wscript.exe` / `powershell.exe`.
+
 ## Install
 
 This is a local DSH bundle, not an npm package:
@@ -30,7 +36,7 @@ The shortcut is the on/off switch: `autostart_disable` removes it (and its `Star
 
 ## Why this chain instead of an exe
 
-DeepSeek Harness has no built-in "start at login" setting, and this machine runs **Smart App Control** in enforcement mode (`VerifiedAndReputablePolicyState = 1`). Smart App Control blocks unsigned executables at sign-in (CodeIntegrity events 3077/3033) — the previous custom `DSH-TrayStart.exe` was blocked every login and DSH never started.
+DeepSeek Harness has no built-in "start at login" setting. When Windows **Smart App Control** is in enforcement mode (`VerifiedAndReputablePolicyState = 1`) it blocks unsigned executables at sign-in (CodeIntegrity events 3077/3033) — an early custom `DSH-TrayStart.exe` build was blocked at every login, so DSH never started. The current chain deliberately runs only Microsoft-signed hosts, so it keeps working whether Smart App Control is on or off.
 
 The chain above only uses Microsoft-signed hosts: `wscript.exe` (signature valid) launches a hidden `powershell.exe` (signature valid), which compiles the small window-hider with `Add-Type` in memory and starts `DeepSeek Harness.exe` (signed by Hangzhou DeepSeek Artificial Intelligence Co., Ltd.). Nothing unsigned is executed, so Smart App Control allows the whole chain.
 
@@ -41,7 +47,7 @@ The chain above only uses Microsoft-signed hosts: `wscript.exe` (signature valid
 | `autostart_status` | Read-only report: shortcut, target/arguments, startup approval, launcher files, Smart App Control, last launcher log lines |
 | `autostart_enable` | Deploys the launcher, writes the Startup shortcut, marks it approved, then runs the chain once in guard mode |
 | `autostart_disable` | Removes the Startup shortcut and its approval entry |
-| `autostart_verify` | Runs six end-to-end checks, including a live guard-mode run of `wscript -> PowerShell -> Add-Type` in a temporary `LOCALAPPDATA` |
+| `autostart_verify` | Runs seven end-to-end checks, including a live guard-mode run of `wscript -> PowerShell -> Add-Type` in a temporary `LOCALAPPDATA` |
 
 ## Behaviour
 
@@ -66,6 +72,11 @@ payload/dsh-tray-start.vbs  signed-host wrapper
 locale/{en,zh}.json       plugin page metadata
 docs/DETAIL.md + preview.svg  plugin page details
 ```
+
+## Changelog
+
+- **1.0.1** — 2026-11-26: declared DSH compatibility (`engines`: `dsh >= 0.2.2-rc.3`, `node >= 20`), refreshed this README against DSH desktop 0.2.2-rc.5, corrected the `autostart_verify` check count. No behaviour change.
+- **1.0.0** — 2026-11-19: first public release (signed `wscript` → hidden PowerShell chain, four agent tools, Windows Startup-folder login item).
 
 ## License
 

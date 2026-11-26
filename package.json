@@ -1,10 +1,14 @@
 {
   "name": "@local/dsh-autostart",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Windows sign-in autostart for DeepSeek Harness: starts the app silently in the tray through the signed wscript/PowerShell launcher chain.",
   "license": "MIT",
   "type": "module",
+  "engines": {
+    "dsh": ">=0.2.2-rc.3",
+    "node": ">=20.0.0"
+  },
   "exports": {
     ".": "./index.js",
     "./locale/*.json": "./locale/*.json",
